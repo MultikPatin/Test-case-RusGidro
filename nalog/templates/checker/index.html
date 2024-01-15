@@ -5,5 +5,13 @@
 {% block main %}
     <div class="container" align="center">
       <h3 >Загрузите файл для проверки</h3>
+      <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+        <input type="file" name="myfile1">
+        <button type="submit">Загрузка</button>
+      </form>
+      {% if file_url %}
+      <a href="{% url 'checker:download'%}">Выгрузить файл</a>
+      {% endif %}
     </div>
 {% endblock %}
