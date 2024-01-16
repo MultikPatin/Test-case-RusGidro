@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "test-case-rusgidro"
 version = "0.1.0"
-description = ""
+description = "Тестовое задание на вакансию"
 authors = ["Dmitry Patin <multik.patin@yandex.ru>"]
 readme = "README.md"
 
@@ -9,6 +9,8 @@ readme = "README.md"
 python = "^3.11"
 django = "^5.0.1"
 python-dotenv = "^1.0.0"
+openpyxl = "^3.1.2"
+pydantic = "^2.5.3"
 
 [tool.poetry.group.dev]
 optional = true
