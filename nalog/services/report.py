@@ -43,13 +43,18 @@ class Report:
         """
         Формирование отчёта с сортировкой
         """
+        self.__red_cells = []
         out_wb = Workbook()
         out_ws = out_wb.active
         out_ws.title = "Отчёт"
         out_ws = self.__creat_sheet_header(out_ws)
         sorted_data = sorted(data, key=lambda d: d["F"], reverse=True)
-        for item in sorted_data:
+        for i, item in enumerate(sorted_data, start=1):
             out_ws.append(item)
+            cell = out_ws[f"F{i + 2}"]
+            if item["F"] != 0:
+                cell.fill = PatternFill("solid", fgColor="c0504d")
+            cell.fill = PatternFill("solid", fgColor="9bbb59")
         out_wb.save(self.__report_file_path)
 
     def __creat_sheet_header(self, ws: Worksheet) -> Worksheet:
