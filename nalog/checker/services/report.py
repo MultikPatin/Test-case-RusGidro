@@ -123,9 +123,9 @@ class Report:
         for k, v in service_settings.report.sheet.cells.merge.items():
             ws.merge_cells(k)
             first_cell, _ = k.split(":")
-            self.__set_sheet_header_style(ws, first_cell, v)
+            self.__set_sheet_header_cell_style(ws, first_cell, v)
         for k, v in service_settings.report.sheet.cells.single.items():
-            self.__set_sheet_header_style(ws, k, v)
+            self.__set_sheet_header_cell_style(ws, k, v)
         for k, v in service_settings.report.sheet.cells.width.items():
             ws.column_dimensions[k].width = v
         for k, v in service_settings.report.sheet.cells.height.items():
@@ -133,7 +133,7 @@ class Report:
         return ws
 
     @staticmethod
-    def __set_sheet_header_style(
+    def __set_sheet_header_cell_style(
         ws: Worksheet, cell_key: str, cell_value: str
     ) -> None:
         """
