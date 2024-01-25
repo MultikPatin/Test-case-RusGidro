@@ -7,11 +7,19 @@
       <h3 >Загрузите файл для проверки</h3>
       <form method="post" enctype="multipart/form-data">
       {% csrf_token %}
-        <input type="file" name="myfile1">
+        <input type="file" name="file_to_check">
         <button type="submit">Загрузка</button>
       </form>
       {% if file_url %}
       <a href="{% url 'checker:download'%}">Выгрузить файл</a>
       {% endif %}
-    </div>
+    <!-- Сообщения об ошибках -->
+      {% if messages %}
+        <script>
+          {% for msg in messages %}
+              alert('{{ msg.message }}');
+          {% endfor %}
+        </script>
+      {% endif %}
+      </div>
 {% endblock %}
