@@ -10,8 +10,8 @@
         <input type="file" name="file_to_check">
         <button type="submit">Загрузка</button>
       </form>
-      {% if file_url %}
-      <a href="{% url 'checker:download'%}">Выгрузить файл</a>
+      {% if file_name %}
+        <a href="{% url 'checker:download'%}">Выгрузить файл</a>
       {% endif %}
     <!-- Сообщения об ошибках -->
       {% if messages %}

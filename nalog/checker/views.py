@@ -22,7 +22,9 @@ def index(request: HttpRequest) -> HttpResponse:
         except NotXLSXFile as e:
             messages.error(request, e.error_message)
 
-        context = {"file_url": file_name, "errors": None}
+        context = {
+            "file_name": file_name
+        }
 
         return render(request, "checker/index.html", context)
     return render(request, "checker/index.html")
@@ -30,9 +32,9 @@ def index(request: HttpRequest) -> HttpResponse:
 
 def download(request: HttpRequest) -> HttpResponse:
     file_path = report_service.get_report_file_path()
-    file = open(file_path, "rb").read()
-    response = HttpResponse(
-        file, content_type="application/vnd.ms-excel", status=HTTPStatus.OK
-    )
-    response["Content-Disposition"] = 'attachment; filename="report.xlsx"'
-    return response
+    with open(file_path, "rb").read() as file:
+        response = HttpResponse(
+            file, content_type="application/vnd.ms-excel", status=HTTPStatus.OK
+        )
+        response["Content-Disposition"] = 'attachment; filename="report.xlsx"'
+        return response

@@ -66,12 +66,14 @@ class Report:
         ):
             try:
                 schema = Row(
-                    branch=row[0],
-                    employee=row[1],
-                    tax_base=row[4],
-                    actual_tax_calculated=row[5],
+                    branch=row[service_settings.file.column["branch"]],
+                    employee=row[service_settings.file.column["employee"]],
+                    tax_base=row[service_settings.file.column["tax_base"]],
+                    actual_tax_calculated=row[
+                        service_settings.file.column["actual_tax_calculated"]
+                    ],
                 )
-                tmp.append(schema)
+                tmp.append(schema.calculated_empty_fields())
             except ValueError as e:
                 print(e)
         return tmp
@@ -83,7 +85,6 @@ class Report:
         """
         tmp = []
         for schema in row_schemas:
-            schema.calculated_empty_fields()
             tmp.append(schema.model_dump())
         return sorted(tmp, key=lambda d: d["F"], reverse=True)
 
@@ -93,7 +94,7 @@ class Report:
         """
         Заполнение ячеек отчёта
         """
-        ws = self.__creat_sheet_header(ws)
+        ws = self.__create_sheet_header(ws)
         for item in rows_dict:
             ws.append(item)
         return ws
@@ -116,7 +117,7 @@ class Report:
                     **service_settings.report.sheet.pattern_fill.correct
                 )
 
-    def __creat_sheet_header(self, ws: Worksheet) -> Worksheet:
+    def __create_sheet_header(self, ws: Worksheet) -> Worksheet:
         """
         Создание шапки отчёта
         """

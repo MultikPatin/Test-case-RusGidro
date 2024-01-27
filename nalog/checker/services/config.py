@@ -13,6 +13,12 @@ class FileSettings(BaseSettings):
         "min_row": 3,
         "max_col": 6,
     }
+    column: dict = {
+        "branch": 0,
+        "employee": 1,
+        "tax_base": 4,
+        "actual_tax_calculated": 5,
+    }
 
 
 class CellsHeaderSettings(BaseSettings):
