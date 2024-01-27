@@ -1,29 +1,40 @@
 from http import HTTPStatus
 
-import services
-from django.conf import settings
+from django.contrib import messages
 from django.core.files.storage import FileSystemStorage
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 
+from checker import services
+from checker.exeptions import NotXLSXFile
+
+file_storage = FileSystemStorage()
+report_service = services.Report(file_storage=file_storage)
+
 
 def index(request: HttpRequest) -> HttpResponse:
+    file_name = None
     if request.method == "POST" and request.FILES:
-        file = request.FILES["myfile1"]
-        fs = FileSystemStorage()
-        filename = fs.save(file.name, file)
+        file = request.FILES["file_to_check"]
+        try:
+            file_name = report_service.save_file(file)
+            report_service.generate_report(file_name)
+        except NotXLSXFile as e:
+            messages.error(request, e.error_message)
 
-        report_service = services.Report(settings.MEDIA_ROOT, filename)
-        report_service.save_report()
+        context = {
+            "file_name": file_name
+        }
 
-        return render(request, "checker/index.html", {"file_url": filename})
+        return render(request, "checker/index.html", context)
     return render(request, "checker/index.html")
 
 
 def download(request: HttpRequest) -> HttpResponse:
-    data = open(f"{settings.MEDIA_ROOT}/report.xlsx", "rb").read()
-    response = HttpResponse(
-        data, content_type="application/vnd.ms-excel", status=HTTPStatus.OK
-    )
-    response["Content-Disposition"] = 'attachment; filename="report.xlsx"'
-    return response
+    file_path = report_service.get_report_file_path()
+    with open(file_path, "rb").read() as file:
+        response = HttpResponse(
+            file, content_type="application/vnd.ms-excel", status=HTTPStatus.OK
+        )
+        response["Content-Disposition"] = 'attachment; filename="report.xlsx"'
+        return response
